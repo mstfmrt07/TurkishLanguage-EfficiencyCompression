@@ -8,6 +8,7 @@
 #include "Utils.h"
 #include "Node.h"
 #include "HuffmanTree.h"
+#include "TextReader.h"
 
 std::unordered_map<char, int> getFrequencyMap(const std::string &str)
 {
@@ -20,10 +21,19 @@ std::unordered_map<char, int> getFrequencyMap(const std::string &str)
     return frequencyMap;
 }
 
+void read(TextReader& textReader)
+{
+    textReader.read();
+}
 
 int main()
 {
-    std::string str = "aaaabbbccddddeeefa";
+//    std::string str = "aaaabbbccddddeeefa";
+    TextReader textReader("../resources/text.txt");
+
+    std::cout << "Reading the sample text: \n " << benchmark(TimeUnit::MILLISECONDS, read, textReader) << "\n";
+
+    std::string str = textReader.read();
     std::cout << str << std::endl;
 
     // Size of the unfiltered and unmodified sample text.

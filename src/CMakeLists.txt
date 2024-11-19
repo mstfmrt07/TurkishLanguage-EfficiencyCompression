@@ -1,4 +1,4 @@
-file(GLOB_RECURSE SOURCES "*.cpp" "*.hpp")
+file(GLOB_RECURSE SOURCES "*.cpp" "*.h *.hpp")
 
 add_library(huffman_lib ${SOURCES})
 
