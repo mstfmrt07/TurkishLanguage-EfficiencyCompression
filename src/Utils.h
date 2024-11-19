@@ -15,6 +15,10 @@ typedef std::chrono::high_resolution_clock::time_point TimeVar;
 
 #define __timeNow() std::chrono::high_resolution_clock::now()
 
+/**
+ * Time units for the benchmark function.
+ * For the simplicity of this experiment; only some of the time units are used.
+ */
 enum class TimeUnit
 {
     MICROSECONDS,
