@@ -23,9 +23,9 @@ std::unordered_map<char, int> getFrequencyMap(const std::string &str)
 
 int main()
 {
-    std::cout << "Reading the sample text: \n " << benchmark(TimeUnit::MILLISECONDS, &TextOperations::read, "../resources/text.txt") << "\n";
+    std::cout << "Reading the sample text: \n " << benchmark(TimeUnit::MILLISECONDS, &TextOperations::read, "../resources/turkish_cities_wiki.txt") << "\n";
 
-    std::string str = TextOperations::read("../resources/text.txt");
+    std::string str = TextOperations::read("../resources/turkish_cities_wiki.txt");
 
     std::wstring wstr = TextOperations::utf8_to_wstring(str);
 
@@ -34,7 +34,7 @@ int main()
 
     auto filteredStr = TextOperations::filterTurkishText(wstr);
 
-    TextOperations::write(filteredStr, "../resources/filtered_text.txt");
+    TextOperations::write(filteredStr, "../resources/filtered_turkish_cities_wiki.txt");
 
     // Size of the filtered and modified sample text.
     std::cout << "Size of the filtered text: " << filteredStr.size() << std::endl;
