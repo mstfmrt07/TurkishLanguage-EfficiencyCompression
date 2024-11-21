@@ -20,8 +20,8 @@ former_turkish_provinces = [
     "Atina", "Bağdat", "Belgrad", "Beyrut", "Bükreş", "Cezayir", "Şam",
     "Kahire", "Kerkük", "Kudüs", "Musul", "Saraybosna", "Selanik", "Sofya",
     "Üsküp", "Priştine", "Tiran", "Mostar", "Halep", "Trablusgarp", "Bingazi",
-    "Cidde", "Medine", "Tunus", "Marakeş", "Kazablanka",
-    "Lefkoşa", "Girne", "Magosa", "Rodos", "Girit"
+    "Cidde", "Medine", "Tunus", "Marakeş", "Kazablanka", "Gazze",
+    "Lefkoşa", "Girne", "Magosa", "Rodos", "Girit", "Batum", "Tiflis"
 ]
 
 #Some more cities around the world
@@ -30,7 +30,15 @@ cities_around_the_world = [
     "Amsterdam", "Brüksel", "Varşova", "Prag", "Budapeşte", "Moskova",
     "Kiev", "Helsinki", "Stockholm", "Oslo", "Kopenhag", "Dublin",
     "Krakow", "Venedik", "Barselona", "Milano", "Münih", "Chicago",
-    "New York", "Los Angeles", "Toronto", "Tokyo", "Pekin", "Şangay"
+    "New York", "Los Angeles", "Toronto", "Tokyo", "Pekin", "Şangay",
+    "Seul", "Bangkok", "Yeni Delhi", "Kuala Lumpur", "Dubai", "Zagreb",
+    "Şarm El Şeyh", "Gize", "Abidjan", "Rio de Janeiro", "Porto", "Braga",
+    "Granada", "Sevilla", "Valencia", "Bilbao", "Pisa", "Floransa", "Napoli",
+    "Palermo", "Bologna", "Köln", "Hamburg", "Frankfurt", "Marsilya",
+    "Gdansk", "Rotterdam", "Eindhoven", "Bergen", "Birmingham", "Manchester",
+    "Liverpool", "Malmö", "Espoo", "Lviv", "Odessa", "Kazan", "Ufa",
+    "Yekaterinburg", "Dubrovnik", "Ostrava", "Bratislava", "Glasgow", "Dundee"
+
 ]
 
 def download_and_combine_wiki_text(city_list, filename="cities_wiki.txt"):
@@ -40,14 +48,14 @@ def download_and_combine_wiki_text(city_list, filename="cities_wiki.txt"):
                 page = wikipedia.page(city)
                 outfile.write(page.content)
                 outfile.write("\n\n")
-                print(f"Downloaded and wrote '{city}' to '{filename}'")
+                print(f"Downloaded and wrote '{city}' to '{filename}' {city_list.index(city)}/{len(city_list)} completed.")
             except wikipedia.exceptions.DisambiguationError as e:
                 try:
                     # Try again with "(il)" appended
                     page = wikipedia.page(city + " (il)")
                     outfile.write(page.content)
                     outfile.write("\n\n")
-                    print(f"Downloaded and wrote '{city} (il)' to '{filename}'")
+                    print(f"Downloaded and wrote '{city} (il)' to '{filename}' {city_list.index(city)}/{len(city_list)} completed.")
                 except wikipedia.exceptions.PageError as e2:
                     print(f"Error downloading page '{city} (il)': {e2}")
             except wikipedia.exceptions.PageError as e:
