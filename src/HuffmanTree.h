@@ -8,24 +8,144 @@
 #include <iostream>
 #include <vector>
 #include <queue>
+#include <map>
+#include <bitset>
+#include <fstream>
 
-#include "Utils.h"
 #include "Node.h"
+
+#define NUM_BITS 8
 
 class HuffmanTree
 {
 public:
-    HuffmanTree(const std::unordered_map<char, int>& frequencyMap)
+    HuffmanTree(const std::map<char, int>& frequencyMap)
     {
         this->m_frequencyMap = frequencyMap;
         this->m_rootNode = buildHuffmanTree();
-
-        std::cout << "Elapsed milliseconds for building the tree: \n" << benchmark(TimeUnit::MILLISECONDS, [&]()
-        {
-            m_rootNode = buildHuffmanTree();
-        }) << "\n";
-
     }
+
+    ~HuffmanTree()
+    {
+        delete m_rootNode;
+    }
+
+    /**
+     * Generates Huffman codes for each character in the tree recursively.
+     * @param node Root node of the Huffman tree
+     * @param code Initial code (empty string)
+     * @param codes Map to store the generated codes
+     */
+    void generateCodes(Node* node, std::string code, std::map<char, std::string>& codes)
+    {
+        // Leaf node
+        if (node->left == nullptr && node->right == nullptr)
+        {
+            codes[node->data] = code;
+            return;
+        }
+        generateCodes(node->left, code + "0", codes);
+        generateCodes(node->right, code + "1", codes);
+    }
+
+    std::string encodeToString(const std::string& text, const std::map<char, std::string>& huffmanCodes)
+    {
+        std::string encodedText;
+        for (char ch : text)
+        {
+            encodedText += huffmanCodes.at(ch);
+        }
+        return encodedText;
+    }
+
+    void encodeToBinary(const std::string& text,
+                        const std::map<char, std::string>& huffmanCodes,
+                        const std::string& filename)
+    {
+
+        std::ofstream outputFile(filename, std::ios::binary);
+        if (!outputFile.is_open())
+        {
+            std::cerr << "Error while opening file for encoding." << std::endl;
+            return;
+        }
+
+        std::string encodedText = encodeToString(text, huffmanCodes);
+
+        int padding = NUM_BITS - (encodedText.length() % NUM_BITS);
+        if (padding != NUM_BITS)
+        {
+            encodedText += std::string(padding, '0');
+        }
+
+        // Put padding info (first byte)
+        outputFile.put(static_cast<char>(padding));
+
+        for (size_t i = 0; i < encodedText.length(); i += NUM_BITS)
+        {
+            std::bitset<NUM_BITS> bits(encodedText.substr(i, NUM_BITS));
+            char byte = static_cast<char>(bits.to_ulong());
+            outputFile.put(byte);
+        }
+
+        outputFile.close();
+    }
+
+    std::string decodeFromString(const std::string& encodedText, Node* root)
+    {
+        std::string decodedText;
+        Node* current = root;
+        for (char bit : encodedText)
+        {
+            if (bit == '0')
+            {
+                current = current->left;
+            }
+            else if (bit == '1')
+            {
+                current = current->right;
+            }
+
+            // Leaf node
+            if (current->left == nullptr && current->right == nullptr)
+            {
+                decodedText += current->data;
+                current = root;
+            }
+        }
+        return decodedText;
+    }
+
+    std::string decodeFromBinary(const std::string& filename, Node* root)
+    {
+        std::ifstream inputFile(filename, std::ios::binary);
+        if (!inputFile.is_open())
+        {
+            std::cerr << "Error while opening file for decoding." << std::endl;
+            return "";
+        }
+
+        // Get the padding information (first byte)
+        char paddingChar;
+        inputFile.get(paddingChar);
+        int padding = static_cast<int>(paddingChar);
+
+        std::string encodedText;
+        char byte;
+        while (inputFile.get(byte))
+        {
+            std::bitset<NUM_BITS> bits(byte);
+            encodedText += bits.to_string();
+        }
+
+        inputFile.close();
+
+        // Remove padding from the encoded text
+        encodedText.erase(encodedText.length() - padding);
+
+        return decodeFromString(encodedText, root);
+    }
+
 
     Node* getRootNode()
     {
@@ -33,7 +153,7 @@ public:
     }
 
 private:
-    std::unordered_map<char, int> m_frequencyMap;
+    std::map<char, int> m_frequencyMap;
     Node* m_rootNode;
 
     /**
