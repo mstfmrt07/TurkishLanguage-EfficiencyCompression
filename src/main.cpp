@@ -55,14 +55,14 @@ int main()
         std::cout << p.first << " : " << p.second << std::endl;
     }
 
-    std::string encodedText = tree.encode(filteredStr, codes);
+    std::string encodedText = tree.encodeToString(filteredStr, codes);
 //    std::cout << "Encoded text: " << encodedText << std::endl;
 
     TextOperations::write(encodedText, "../resources/encoded_text.txt");
 
     tree.encodeToBinary(filteredStr, codes, "../resources/encoded_text.bin");
 
-    std::string decodedText = tree.decode(encodedText, root);
+    std::string decodedText = tree.decodeFromString(encodedText, root);
 //    std::cout << "Decoded text: " << decodedText << std::endl;
 
     TextOperations::write(decodedText, "../resources/decoded_text.txt");

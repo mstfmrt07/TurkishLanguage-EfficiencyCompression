@@ -83,7 +83,7 @@ public:
 
     static std::string filterTurkishText(std::wstring& text)
     {
-        const std::wstring turkishAlphabet = L"abcçdefgğhıijklmnoöprsştuüvyz ";
+        const std::wstring turkishAlphabet = L"abcçdefgğhıijklmnoöprsştuüvyz";
 
          std::map<wchar_t, wchar_t> lowerCaseMap = {
                 {L'A', L'a'}, {L'B', L'b'}, {L'C', L'c'}, {L'Ç', L'ç'}, {L'D', L'd'}, {L'E', L'e'},
@@ -94,15 +94,24 @@ public:
         };
 
         std::wstring filteredText;
+
+        bool spaceEncountered = false;
         for (wchar_t c: text)
         {
             if (turkishAlphabet.find(c) != std::string::npos)
             {
                 filteredText.push_back(c);
+                spaceEncountered = false;
             }
             else if (lowerCaseMap.find(c) != lowerCaseMap.end())
             {
                 filteredText.push_back(lowerCaseMap[c]);
+                spaceEncountered = false;
+            }
+            else if (c == L' ' && !spaceEncountered) // Logic for skipping multiple spaces
+            {
+                filteredText.push_back(c);
+                spaceEncountered = true;
             }
         }
 
