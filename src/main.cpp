@@ -9,6 +9,7 @@
 #include "Node.h"
 #include "HuffmanTree.h"
 #include "TextOperations.h"
+#include "Measurements.h"
 
 std::map<char, int> getFrequencyMap(const std::string &str)
 {
@@ -58,16 +59,16 @@ int main()
     std::string encodedText = tree.encodeToString(filteredStr, codes);
 //    std::cout << "Encoded text: " << encodedText << std::endl;
 
-    TextOperations::write(encodedText, "../resources/encoded_text.txt");
+//    TextOperations::write(encodedText, "../resources/encoded_text.txt");
 
-    tree.encodeToBinary(filteredStr, codes, "../resources/encoded_text.bin");
+    tree.encodeToBinary(filteredStr, codes, "../resources/encoded_text.txt");
 
     std::string decodedText = tree.decodeFromString(encodedText, root);
 //    std::cout << "Decoded text: " << decodedText << std::endl;
 
     TextOperations::write(decodedText, "../resources/decoded_text.txt");
 
-    std::string decodedTextFromBinary = tree.decodeFromBinary("../resources/encoded_text.bin", root);
+    std::string decodedTextFromBinary = tree.decodeFromBinary("../resources/encoded_text.txt", root);
 //    std::cout << "Decoded text from binary: " << decodedTextFromBinary << std::endl;
 
     auto endTime = __timeNow();
