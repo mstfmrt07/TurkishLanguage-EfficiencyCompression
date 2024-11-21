@@ -8,7 +8,7 @@
 #include "Utils.h"
 #include "Node.h"
 #include "HuffmanTree.h"
-#include "TextReader.h"
+#include "TextOperations.h"
 
 std::unordered_map<char, int> getFrequencyMap(const std::string &str)
 {
@@ -21,27 +21,27 @@ std::unordered_map<char, int> getFrequencyMap(const std::string &str)
     return frequencyMap;
 }
 
-void read(TextReader& textReader)
-{
-    textReader.read();
-}
-
 int main()
 {
-//    std::string str = "aaaabbbccddddeeefa";
-    TextReader textReader("../resources/text.txt");
+    std::cout << "Reading the sample text: \n " << benchmark(TimeUnit::MILLISECONDS, &TextOperations::read, "../resources/text.txt") << "\n";
 
-    std::cout << "Reading the sample text: \n " << benchmark(TimeUnit::MILLISECONDS, read, textReader) << "\n";
+    std::string str = TextOperations::read("../resources/text.txt");
 
-    std::string str = textReader.read();
-    std::cout << str << std::endl;
+    std::wstring wstr = TextOperations::utf8_to_wstring(str);
 
     // Size of the unfiltered and unmodified sample text.
-    std::cout << "Size of the sample text: " << str.size() << std::endl;
+    std::cout << "Size of the sample text: " << wstr.size() << std::endl << std::endl;
 
-    std::cout << "Elapsed milliseconds for frequency map: \n" << benchmark(TimeUnit::MILLISECONDS, getFrequencyMap, str) << "\n";
+    auto filteredStr = TextOperations::filterTurkishText(wstr);
 
-    std::unordered_map<char, int> frequencyMap = getFrequencyMap(str);
+    TextOperations::write(filteredStr, "../resources/filtered_text.txt");
+
+    // Size of the filtered and modified sample text.
+    std::cout << "Size of the filtered text: " << filteredStr.size() << std::endl;
+
+    std::cout << "Elapsed milliseconds for frequency map: \n" << benchmark(TimeUnit::MILLISECONDS, getFrequencyMap, filteredStr) << "\n";
+
+    std::unordered_map<char, int> frequencyMap = getFrequencyMap(filteredStr);
     std::cout << "Frequency Map: \n";
     for (const auto &pair: frequencyMap)
     {
