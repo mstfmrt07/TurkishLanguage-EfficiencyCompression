@@ -1,0 +1,5 @@
+Compression ratio: 0.565177
+Saved space: 0.434823
+Entropy: 4.496811
+Average code length: 4.521410
+Redundancy: 0.100638

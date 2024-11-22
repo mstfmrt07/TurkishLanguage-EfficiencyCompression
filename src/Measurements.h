@@ -63,13 +63,30 @@ public:
      */
     static double calculateAverageCodeLength(std::map<char, int> frequencyMap, const std::map<char, std::string>& huffmanCodes)
     {
-        double averageCodeLength = 0;
+        int textSize = 0;
+        double totalCodeLength = 0;
         for (auto p : frequencyMap)
         {
-            averageCodeLength += p.second * huffmanCodes.at(p.first).size();
+            textSize += p.second;
+            totalCodeLength += p.second * huffmanCodes.at(p.first).size();
         }
-        return averageCodeLength;
+        return totalCodeLength / textSize;
     }
+
+    /**
+     * Calculates the redundancy of the given frequency map.
+     * Formula: R = 1 - (H(U) / max(H(U))
+     * @param frequencyMap Frequency map of the characters
+     * @param textSize Size of the text
+     * @return Redundancy of the text
+     */
+    static double calculateRedundancy(std::map<char, int> frequencyMap, int textSize)
+    {
+        double entropy = calculateEntropy(frequencyMap, textSize);
+        double maxEntropy = log2(frequencyMap.size());
+        return 1 - (entropy / maxEntropy);
+    }
+
 };
 
 #endif //__MEASUREMENTS_H__

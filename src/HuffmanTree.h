@@ -58,7 +58,7 @@ public:
         return encodedText;
     }
 
-    void encodeToBinary(const std::string& text,
+    std::bitset<NUM_BITS> encodeToBinary(const std::string& text,
                         const std::map<char, std::string>& huffmanCodes,
                         const std::string& filename)
     {
@@ -67,7 +67,7 @@ public:
         if (!outputFile.is_open())
         {
             std::cerr << "Error while opening file for encoding." << std::endl;
-            return;
+            return std::bitset<NUM_BITS>(0);
         }
 
         std::string encodedText = encodeToString(text, huffmanCodes);
@@ -88,7 +88,9 @@ public:
             outputFile.put(byte);
         }
 
+        std::bitset<NUM_BITS> bits(encodedText.substr(encodedText.length() - padding));
         outputFile.close();
+        return bits;
     }
 
     std::string decodeFromString(const std::string& encodedText, Node* root)
